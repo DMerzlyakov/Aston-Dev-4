@@ -9,6 +9,7 @@ import android.view.View
 import java.util.*
 import kotlin.math.*
 
+/** Custom View - Analog Watch  */
 class CustomAnalogClock @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -78,6 +79,7 @@ class CustomAnalogClock @JvmOverloads constructor(
         postInvalidateDelayed(100)
     }
 
+    /** Отрисовка циферблата  */
     private fun drawClockFace(canvas: Canvas) {
         // Границы циферблата
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, circlePaint)
@@ -87,10 +89,8 @@ class CustomAnalogClock @JvmOverloads constructor(
             val angle = PI / 6 * hour
 
             canvas.drawLine(
-                // Две точки ближе к центру
                 (width / 2 + cos(angle) * mRadius * 0.85).toFloat(),
                 (height / 2 + sin(angle) * mRadius * 0.85).toFloat(),
-                // Две точки ближе к границам циферблата
                 (width / 2 + cos(angle) * mRadius).toFloat(),
                 (height / 2 + sin(angle) * mRadius).toFloat(),
                 marksPaint
@@ -101,7 +101,7 @@ class CustomAnalogClock @JvmOverloads constructor(
     private fun drawHands(canvas: Canvas) {
         val calendar = Calendar.getInstance()
 
-        // seconds
+        /** Секундная стрелка */
         val angleSeconds = PI * calendar.get(Calendar.SECOND) / 30 - PI / 2
 
         canvas.drawLine(
@@ -112,7 +112,7 @@ class CustomAnalogClock @JvmOverloads constructor(
             secondPaint
         )
 
-        // minutes
+        /** Минутная стрелка */
         val angleMinutes = PI * calendar.get(Calendar.MINUTE) / 30 - PI / 2
 
         canvas.drawLine(
@@ -123,7 +123,7 @@ class CustomAnalogClock @JvmOverloads constructor(
             minutePaint
         )
 
-        // hours
+        /** Часовая стрелка */
         val angleHours =
             PI * (calendar.get(Calendar.HOUR) + calendar.get(Calendar.MINUTE) / 60F) * 5F / 30 - PI / 2
 

@@ -85,15 +85,10 @@ class CustomAnalogClock @JvmOverloads constructor(
         canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, circlePaint)
 
         // Метки часов на циферблате
-        for (hour in hoursRange) {
-            val angle = PI / 6 * hour
-
-            canvas.drawLine(
-                (width / 2 + cos(angle) * mRadius * 0.85).toFloat(),
-                (height / 2 + sin(angle) * mRadius * 0.85).toFloat(),
-                (width / 2 + cos(angle) * mRadius).toFloat(),
-                (height / 2 + sin(angle) * mRadius).toFloat(),
-                marksPaint
+        hoursRange.onEach {
+            drawLine(
+                paint = marksPaint, canvas = canvas, angle = (PI / 6 * it).toFloat(),
+                radiusStart = mRadius * 0.85F, radiusEnd = mRadius
             )
         }
     }
@@ -102,38 +97,47 @@ class CustomAnalogClock @JvmOverloads constructor(
         val calendar = Calendar.getInstance()
 
         /** Секундная стрелка */
-        val angleSeconds = PI * calendar.get(Calendar.SECOND) / 30 - PI / 2
-
-        canvas.drawLine(
-            (width / 2f - cos(angleSeconds) * mRadius * 0.4).toFloat(),
-            (height / 2f - sin(angleSeconds) * mRadius * 0.4).toFloat(),
-            (width / 2f + cos(angleSeconds) * mRadius * 0.7).toFloat(),
-            (height / 2f + sin(angleSeconds) * mRadius * 0.7).toFloat(),
-            secondPaint
+        drawLine(
+            paint = secondPaint, canvas = canvas,
+            angle = (PI * calendar.get(Calendar.SECOND) / 30 - PI / 2).toFloat(),
+            radiusStart = mRadius * -0.4F, radiusEnd = mRadius * 0.7F
         )
 
         /** Минутная стрелка */
-        val angleMinutes = PI * calendar.get(Calendar.MINUTE) / 30 - PI / 2
-
-        canvas.drawLine(
-            (width / 2f - cos(angleMinutes) * mRadius * 0.2).toFloat(),
-            (height / 2f - sin(angleMinutes) * mRadius * 0.2).toFloat(),
-            (width / 2f + cos(angleMinutes) * mRadius * 0.5).toFloat(),
-            (height / 2f + sin(angleMinutes) * mRadius * 0.5).toFloat(),
-            minutePaint
+        drawLine(
+            paint = minutePaint, canvas = canvas,
+            angle = (PI * calendar.get(Calendar.MINUTE) / 30 - PI / 2).toFloat(),
+            radiusStart = mRadius * -0.2F, radiusEnd = mRadius * 0.5F
         )
 
         /** Часовая стрелка */
-        val angleHours =
-            PI * (calendar.get(Calendar.HOUR) + calendar.get(Calendar.MINUTE) / 60F) * 5F / 30 - PI / 2
-
-        canvas.drawLine(
-            (width / 2f - cos(angleHours) * mRadius * 0.1).toFloat(),
-            (height / 2f - sin(angleHours) * mRadius * 0.1).toFloat(),
-            (width / 2f + cos(angleHours) * mRadius * 0.4).toFloat(),
-            (height / 2f + sin(angleHours) * mRadius * 0.4).toFloat(),
-            hourPaint
+        drawLine(
+            paint = hourPaint, canvas = canvas,
+            angle = (PI * getHourWithMinute(calendar) * 5F / 30 - PI / 2).toFloat(),
+            radiusStart = mRadius * -0.1F, radiusEnd = mRadius * 0.4F
         )
     }
+
+    /** Отрисовка линий по предоставленным значениям  */
+    private fun drawLine(
+        paint: Paint,
+        canvas: Canvas,
+        angle: Float,
+        radiusStart: Float,
+        radiusEnd: Float
+    ) {
+        canvas.drawLine(
+            (width / 2f + cos(angle) * radiusStart),
+            (height / 2f + sin(angle) * radiusStart),
+            (width / 2f + cos(angle) * radiusEnd),
+            (height / 2f + sin(angle) * radiusEnd),
+            paint
+        )
+
+    }
+
+    /** Получаем десятичное число часов, учитывая минуты*/
+    private fun getHourWithMinute(calendar: Calendar) =
+        (calendar.get(Calendar.HOUR) + calendar.get(Calendar.MINUTE) / 60F)
 
 }

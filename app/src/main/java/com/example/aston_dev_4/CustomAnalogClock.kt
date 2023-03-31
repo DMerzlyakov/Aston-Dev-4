@@ -25,7 +25,6 @@ class CustomAnalogClock @JvmOverloads constructor(
     private var hourPaint = Paint()
     private var secondPaint = Paint()
 
-
     init {
         with(circlePaint) {
             color = Color.BLACK

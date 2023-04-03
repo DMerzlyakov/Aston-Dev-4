@@ -75,7 +75,8 @@ class CustomAnalogClock @JvmOverloads constructor(
         super.onDraw(canvas)
         drawClockFace(canvas)
         drawHands(canvas)
-        postInvalidateDelayed(100)
+//        postInvalidateDelayed(500)
+        invalidate()
     }
 
     /** Отрисовка циферблата  */
